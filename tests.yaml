@@ -1,0 +1,7 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: "Hugo Version is v0.80.0"
+    command: "/usr/local/bin/hugo"
+    args: ["version"]
+    expectedOutput: ["v0.80.0"]
