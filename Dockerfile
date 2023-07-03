@@ -79,7 +79,6 @@ RUN curl --silent --show-error --location --output /tmp/golangci-lint.deb \
   # Cleanup
   && rm -f /tmp/golangci-lint.deb
 
-
 # W3C validator
 RUN git clone https://github.com/holbertonschool/W3C-Validator.git /opt/W3C-Validator \
   # Sanity check

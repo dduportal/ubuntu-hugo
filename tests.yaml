@@ -1,7 +1,52 @@
 schemaVersion: 2.0.0
 
 commandTests:
-  - name: "Hugo Version is v0.80.0"
-    command: "/usr/local/bin/hugo"
+  - name: "Check Hugo Version"
+    command: "hugo"
     args: ["version"]
     expectedOutput: ["v0.80.0"]
+  - name: "Check Golang Version"
+    command: "go"
+    args: ["version"]
+    expectedOutput: ["go1.15.7"]
+  - name: "Check GolangCI Lint Version"
+    command: "golangci-lint"
+    args: ["version"]
+    # Version is printed on the Stderr
+    expectedError: ["1.36.0"]
+  - name: "Check Markdown Lint CLI Version"
+    command: "markdownlint"
+    args: ["--version"]
+    expectedOutput: ["0.26.0"]
+  - name: "Check Yamllint Version"
+    command: "yamllint"
+    args: ["--version"]
+    expectedOutput: ["yamllint 1."]
+  - name: "Check YQ Version"
+    command: "yq"
+    args: ["--version"]
+    expectedOutput: ["4.5.0"]
+  - name: "Check markdown-link-check Help"
+    command: "markdown-link-check"
+    args: ["--help"]
+    expectedOutput: ["Usage:", "markdown-link-check"]
+  - name: "Check NodeJS Version"
+    command: "node"
+    args: ["--version"]
+    expectedOutput: ["v14."]
+  - name: "Check Make Version"
+    command: "make"
+    args: ["--version"]
+    expectedOutput: ["GNU Make 4."]
+  - name: "Check JQ Version"
+    command: "jq"
+    args: ["--version"]
+    expectedOutput: ["jq-1."]
+  - name: "Check Curl Version"
+    command: "curl"
+    args: ["--version"]
+    expectedOutput: ["curl 7."]
+  - name: "Check Git Version"
+    command: "git"
+    args: ["--version"]
+    expectedOutput: ["git version 2."]
