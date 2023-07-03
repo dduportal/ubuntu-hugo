@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 LABEL maintainer="Damien Duportal <damien.duportal@gmail.com>"
-ARG TARGETPLATFORM
+# This value can be overriden with the `--platform=<new value>` flag of `docker build`.
+ARG TARGETPLATFORM=linux/amd64
 
 ## Global setup
 ENV LANG en_US.UTF-8
