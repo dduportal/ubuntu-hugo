@@ -27,7 +27,7 @@ jobs:
         env:
           CST_VERSION: 1.15.0
         run: |
-          curl --location --output=/usr/local/bin/container-structure-test "https://github.com/GoogleContainerTools/container-structure-test/releases/download/v${CST_VERSION}/container-structure-test-linux-amd64"
+          curl --location --output /usr/local/bin/container-structure-test "https://github.com/GoogleContainerTools/container-structure-test/releases/download/v${CST_VERSION}/container-structure-test-linux-amd64"
           chmod a+x /usr/local/bin/container-structure-test
           container-structure-test version
       - name: Test image
