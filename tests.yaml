@@ -1,5 +1,10 @@
 schemaVersion: 2.0.0
 
+fileContentTests:
+- name: 'Check Ubuntu version'
+  path: '/etc/os-release'
+  expectedContents: ['Ubuntu 18.04']
+
 commandTests:
   - name: "Check Hugo Version"
     command: "hugo"
