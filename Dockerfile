@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 LABEL maintainer="Damien Duportal <damien.duportal@gmail.com>"
 # This value can be overriden with the `--platform=<new value>` flag of `docker build`.
 ARG TARGETPLATFORM=linux/amd64
@@ -28,8 +28,8 @@ RUN apt-get update \
     jq=1.* \
     make=4.* \
     nodejs=14.* \
-    python3-pip=9.* \
-    python3-setuptools=39.* \
+    python3-pip=* \
+    python3-setuptools=* \
     rsync=* \
     shellcheck=0.* \
     tar=1.* \
