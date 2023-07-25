@@ -55,3 +55,9 @@ commandTests:
     command: "git"
     args: ["--version"]
     expectedOutput: ["git version 2."]
+  - name: "Check Holberton's w3c validator"
+    command: "w3c_validator.py"
+    # No arguments exits with 1 and the usage message - https://github.com/alx-tools/W3C-Validator/blob/89ee8e6e8f61403af16e83901eb24001639ade2f/w3c_validator.py#L126C25-L127
+    exitCode: 1
+    expectedError: ["usage: w3c_validator.py file1"]
+    
