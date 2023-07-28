@@ -17,7 +17,7 @@ jobs:
       contents: read
       packages: write
     env:
-      IMAGE_NAME: ubuntu-hugo
+      IMAGE_NAME: dduportal/ubuntu-hugo
       REGISTRY: ghcr.io
     steps:
       - name: Checkout
