@@ -13,7 +13,7 @@ commandTests:
   - name: "Check Golang Version"
     command: "go"
     args: ["version"]
-    expectedOutput: ["go1.15.7"]
+    expectedOutput: ["go1.20.6"]
   - name: "Check GolangCI Lint Version"
     command: "golangci-lint"
     args: ["version"]

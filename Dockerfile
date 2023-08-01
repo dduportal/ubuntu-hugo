@@ -53,19 +53,18 @@ RUN curl --silent --show-error --location --output /tmp/hugo.tgz \
   && rm -f /tmp/hugo*
 
 ## Install Golang from binary distribution
-ARG GO_VERSION="1.15.7"
-ARG GO_CHECKSUM="0d142143794721bb63ce6c8a6180c4062bcf8ef4715e7d6d6609f3a8282629b3"
+ARG GO_VERSION="1.20.6"
+COPY ./checksums/golang_${GO_VERSION}_checksums.txt /tmp/golang_checksums.txt
 # No need to use C-Go and avoid requirement to GCC
 ENV CGO_ENABLED=0
 ENV GO11MODULES=on
 RUN curl --silent --show-error --location --output /tmp/go.tgz \
-    "https://golang.org/dl/go${GO_VERSION}.linux-${TARGETPLATFORM#*/}.tar.gz" \
+    "https://golang.org/dl/go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" \
   # Control the checksum to ensure no one is messing up with the download
-  && sha256sum /tmp/go.tgz | grep -q "${GO_CHECKSUM}" \
+  && grep "$(sha256sum /tmp/go.tgz | awk '{print $1}')" /tmp/golang_checksums.txt \
   # Extract to a directory part of the default PATH
   && tar -C /usr/local -xzf /tmp/go.tgz \
   && rm -f /tmp/go.tgz
-
 
 ## Install Custom Tools for Edx Modules
 ARG GOLANGCILINT_VERSION="1.36.0"
