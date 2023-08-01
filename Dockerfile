@@ -67,12 +67,12 @@ RUN curl --silent --show-error --location --output /tmp/go.tgz \
   && rm -f /tmp/go.tgz
 
 ## Install Custom Tools for Edx Modules
-ARG GOLANGCILINT_VERSION="1.36.0"
-ARG GOLANGCILINT_CHECKSUM="c36e9c7153e87dabcbc424c3a86b32676631ab94db4b5d7d2907675aea5c6709"
+ARG GOLANGCILINT_VERSION="1.53.3"
+COPY ./checksums/golangci-lint-${GOLANGCILINT_VERSION}-checksums.txt /tmp/golangci_checksums.txt
 RUN curl --silent --show-error --location --output /tmp/golangci-lint.deb \
-    "https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCILINT_VERSION}/golangci-lint-${GOLANGCILINT_VERSION}-linux-${TARGETPLATFORM#*/}.deb" \
-    # Control the checksum to ensure no one is messing up with the download
-  && sha256sum /tmp/golangci-lint.deb | grep -q "${GOLANGCILINT_CHECKSUM}" \
+    "https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCILINT_VERSION}/golangci-lint-${GOLANGCILINT_VERSION}-linux-$(dpkg --print-architecture).deb" \
+  # Control the checksum to ensure no one is messing up with the download
+  && grep "$(sha256sum /tmp/golangci-lint.deb | awk '{print $1}')" /tmp/golangci_checksums.txt \
   # Extract to a directory part of the default PATH
   && dpkg -i /tmp/golangci-lint.deb \
   # Cleanup

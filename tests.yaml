@@ -18,7 +18,7 @@ commandTests:
     command: "golangci-lint"
     args: ["version"]
     # Version is printed on the Stderr
-    expectedError: ["1.36.0"]
+    expectedError: ["1.53.3"]
   - name: "Check Markdown Lint CLI Version"
     command: "markdownlint"
     args: ["--version"]
