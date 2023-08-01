@@ -40,17 +40,17 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ## Install the hugo binary with a fixed version and control shasum
-ARG HUGO_VERSION="0.80.0"
-ARG HUGO_CHECKSUM="b3a259bbe633e2f9182f8ecfc1b5cee6a7cfc4c970defe5f29c9959f2ef3259b"
+ARG HUGO_VERSION="0.115.4"
+COPY ./checksums/hugo_${HUGO_VERSION}_checksums.txt /tmp/hugo_checksums.txt
 # Download the Linux 64 bits default archive
 RUN curl --silent --show-error --location --output /tmp/hugo.tgz \
-    "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" \
+    "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-$(dpkg --print-architecture).tar.gz" \
   # Control the checksum to ensure no one is messing up with the download
-  && sha256sum /tmp/hugo.tgz | grep -q "${HUGO_CHECKSUM}" \
+  && grep "$(sha256sum /tmp/hugo.tgz | awk '{print $1}')" /tmp/hugo_checksums.txt \
   # Extract to a directory part of the default PATH
   && tar xzf /tmp/hugo.tgz -C /usr/local/bin/ \
   # Cleanup
-  && rm -f /tmp/hugo.tgz
+  && rm -f /tmp/hugo*
 
 ## Install Golang from binary distribution
 ARG GO_VERSION="1.15.7"

@@ -9,7 +9,7 @@ commandTests:
   - name: "Check Hugo Version"
     command: "hugo"
     args: ["version"]
-    expectedOutput: ["v0.80.0"]
+    expectedOutput: ["v0.115.4"]
   - name: "Check Golang Version"
     command: "go"
     args: ["version"]
