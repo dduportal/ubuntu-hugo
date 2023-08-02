@@ -17,8 +17,7 @@ commandTests:
   - name: "Check GolangCI Lint Version"
     command: "golangci-lint"
     args: ["version"]
-    # Version is printed on the Stderr
-    expectedError: ["1.53.3"]
+    expectedOutput: ["1.53.3"]
   - name: "Check Markdown Lint CLI Version"
     command: "markdownlint"
     args: ["--version"]
