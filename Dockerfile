@@ -116,12 +116,18 @@ RUN curl --fail --silent --show-error --location https://get.docker.com -o /tmp/
 # Install Docker Compose plugin
 ARG DOCKER_COMPOSE_VERSION=2.20.2
 RUN apt-get update --quiet && \
-  apt-get install --yes --no-install-recommends docker-compose-plugin="${DOCKER_COMPOSE_VERSION}"*
+  apt-get install --yes --no-install-recommends docker-compose-plugin="${DOCKER_COMPOSE_VERSION}"* \
+  # Cleanup APT cache to ease extension of this image
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install Docker BuildX plugin
 ARG DOCKER_BUILDX_VERSION=0.11.2
 RUN apt-get update --quiet && \
-  apt-get install --yes --no-install-recommends docker-buildx-plugin="${DOCKER_BUILDX_VERSION}"*
+  apt-get install --yes --no-install-recommends docker-buildx-plugin="${DOCKER_BUILDX_VERSION}"* \
+  # Cleanup APT cache to ease extension of this image
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # set up subuid/subgid so that "--userns-remap=default" works out-of-the-box
 RUN set -eux; \
