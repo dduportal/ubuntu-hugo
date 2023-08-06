@@ -1,9 +1,33 @@
 schemaVersion: 2.0.0
 
+fileExistenceTests:
+  - name: 'DinD Binary'
+    path: /usr/local/bin/dind
+    shouldExist: true
+    isExecutableBy: owner
+  - name: 'DinD Entrypoint'
+    path: /usr/local/bin/dockerd-entrypoint.sh
+    shouldExist: true
+    isExecutableBy: owner
+  - name: 'docker-init'
+    path: /usr/local/bin/docker-init
+    shouldExist: true
+    isExecutableBy: owner
+
 fileContentTests:
-- name: 'Check Ubuntu version'
-  path: '/etc/os-release'
-  expectedContents: ['Ubuntu 22.04']
+  - name: 'Check Ubuntu version'
+    path: '/etc/os-release'
+    expectedContents: ['Ubuntu 22.04']
+  - name: 'User dockremap'
+    path: '/etc/subuid'
+    expectedContents: ['dockremap']
+  - name: 'Group dockremap'
+    path: '/etc/subgid'
+    expectedContents: ['dockremap']
+
+
+metadataTest:
+  volumes: [/var/lib/docker]
 
 commandTests:
   - name: "Check Hugo Version"
@@ -65,3 +89,16 @@ commandTests:
       - -c
       - pip list | grep requests
     expectedOutput: ["2."]
+  - name: "Check Docker Client Version"
+    command: "docker"
+    args: ["version"]
+    expectedOutput: ["24.0.5"]
+    exitCode: 1
+  - name: "Check Docker Compose Version"
+    command: "docker"
+    args: ["compose","version"]
+    expectedOutput: ["v2.20.2"]
+  - name: "Check Docker BuildX Version"
+    command: "docker"
+    args: ["buildx","version"]
+    expectedOutput: ["v0.11.2"]
