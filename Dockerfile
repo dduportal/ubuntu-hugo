@@ -44,12 +44,12 @@ RUN apt-get update \
 
 ## Install the hugo binary with a fixed version and control shasum
 ARG HUGO_VERSION="0.115.4"
-COPY ./checksums/hugo_${HUGO_VERSION}_checksums.txt /tmp/hugo_checksums.txt
+COPY ./checksums/hugo-${HUGO_VERSION}-checksums.txt /tmp/hugo-checksums.txt
 # Download the Linux 64 bits default archive
 RUN curl --silent --show-error --location --output /tmp/hugo.tgz \
     "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-$(dpkg --print-architecture).tar.gz" \
   # Control the checksum to ensure no one is messing up with the download
-  && grep "$(sha256sum /tmp/hugo.tgz | awk '{print $1}')" /tmp/hugo_checksums.txt \
+  && grep "$(sha256sum /tmp/hugo.tgz | awk '{print $1}')" /tmp/hugo-checksums.txt \
   # Extract to a directory part of the default PATH
   && tar xzf /tmp/hugo.tgz -C /usr/local/bin/ \
   # Cleanup
@@ -57,25 +57,25 @@ RUN curl --silent --show-error --location --output /tmp/hugo.tgz \
 
 ## Install Golang from binary distribution
 ARG GO_VERSION="1.20.6"
-COPY ./checksums/golang_${GO_VERSION}_checksums.txt /tmp/golang_checksums.txt
+COPY ./checksums/golang-${GO_VERSION}-checksums.txt /tmp/golang-checksums.txt
 # No need to use C-Go and avoid requirement to GCC
 ENV CGO_ENABLED=0
 ENV GO11MODULES=on
 RUN curl --silent --show-error --location --output /tmp/go.tgz \
     "https://golang.org/dl/go${GO_VERSION}.linux-$(dpkg --print-architecture).tar.gz" \
   # Control the checksum to ensure no one is messing up with the download
-  && grep "$(sha256sum /tmp/go.tgz | awk '{print $1}')" /tmp/golang_checksums.txt \
+  && grep "$(sha256sum /tmp/go.tgz | awk '{print $1}')" /tmp/golang-checksums.txt \
   # Extract to a directory part of the default PATH
   && tar -C /usr/local -xzf /tmp/go.tgz \
   && rm -f /tmp/go.tgz
 
 ## Install Custom Tools for Edx Modules
 ARG GOLANGCILINT_VERSION="1.53.3"
-COPY ./checksums/golangci-lint-${GOLANGCILINT_VERSION}-checksums.txt /tmp/golangci_checksums.txt
+COPY ./checksums/golangci-lint-${GOLANGCILINT_VERSION}-checksums.txt /tmp/golangci-checksums.txt
 RUN curl --silent --show-error --location --output /tmp/golangci-lint.deb \
     "https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCILINT_VERSION}/golangci-lint-${GOLANGCILINT_VERSION}-linux-$(dpkg --print-architecture).deb" \
   # Control the checksum to ensure no one is messing up with the download
-  && grep "$(sha256sum /tmp/golangci-lint.deb | awk '{print $1}')" /tmp/golangci_checksums.txt \
+  && grep "$(sha256sum /tmp/golangci-lint.deb | awk '{print $1}')" /tmp/golangci-checksums.txt \
   # Extract to a directory part of the default PATH
   && dpkg -i /tmp/golangci-lint.deb \
   # Cleanup
@@ -142,3 +142,12 @@ COPY --from=dind /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/dockerd-ent
 COPY --from=dind /usr/local/bin/docker-init /usr/local/bin/docker-init
 
 VOLUME /var/lib/docker
+
+ARG HADOLINT_VERSION=2.12.0
+COPY ./checksums/hadolint-${HADOLINT_VERSION}-checksums.txt /tmp/hadolint-checksums.txt
+RUN if [ "$(dpkg --print-architecture)" == "amd64" ]; then cpu_arch='x86_64'; else cpu_arch='arm64';fi; \
+  curl --fail --silent --show-error --location --output /usr/local/bin/hadolint \
+    "https://github.com/hadolint/hadolint/releases/download/v${HADOLINT_VERSION}/hadolint-Linux-${cpu_arch}" \
+  # Control the checksum to ensure no one is messing up with the download
+  && grep "$(sha256sum /usr/local/bin/hadolint | awk '{print $1}')" /tmp/hadolint-checksums.txt \
+  && chmod a+x /usr/local/bin/hadolint
