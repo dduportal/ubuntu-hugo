@@ -1,3 +1,6 @@
+ARG DOCKER_VERSION=24.0.5
+FROM docker:"${DOCKER_VERSION}"-dind AS dind
+
 FROM ubuntu:22.04
 LABEL maintainer="Damien Duportal <damien.duportal@gmail.com>"
 # This value can be overriden with the `--platform=<new value>` flag of `docker build`.
@@ -103,3 +106,39 @@ RUN curl --silent --show-error --location --output /usr/local/bin/yq \
   && sha256sum /usr/local/bin/yq | grep -q "${YQ_CHECKSUM}" \
   # Extract to a directory part of the default PATH
   && chmod a+x /usr/local/bin/yq
+
+# Install Docker Engine
+ARG DOCKER_VERSION=24.0.5
+RUN curl --fail --silent --show-error --location https://get.docker.com -o /tmp/install-docker.sh \
+  && bash /tmp/install-docker.sh --version "${DOCKER_VERSION}" \
+  && rm -f /tmp/install-docker.sh
+
+# Install Docker Compose plugin
+ARG DOCKER_COMPOSE_VERSION=2.20.2
+RUN apt-get update --quiet && \
+  apt-get install --yes --no-install-recommends docker-compose-plugin="${DOCKER_COMPOSE_VERSION}"* \
+  # Cleanup APT cache to ease extension of this image
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Docker BuildX plugin
+ARG DOCKER_BUILDX_VERSION=0.11.2
+RUN apt-get update --quiet && \
+  apt-get install --yes --no-install-recommends docker-buildx-plugin="${DOCKER_BUILDX_VERSION}"* \
+  # Cleanup APT cache to ease extension of this image
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# set up subuid/subgid so that "--userns-remap=default" works out-of-the-box
+RUN set -eux; \
+	addgroup --system dockremap; \
+	adduser --system dockremap; \
+  adduser dockremap dockremap; \
+	echo 'dockremap:165536:65536' >> /etc/subuid; \
+	echo 'dockremap:165536:65536' >> /etc/subgid
+
+COPY --from=dind /usr/local/bin/dind /usr/local/bin/dind
+COPY --from=dind /usr/local/bin/dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
+COPY --from=dind /usr/local/bin/docker-init /usr/local/bin/docker-init
+
+VOLUME /var/lib/docker
