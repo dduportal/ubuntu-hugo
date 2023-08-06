@@ -102,3 +102,7 @@ commandTests:
     command: "docker"
     args: ["buildx","version"]
     expectedOutput: ["v0.11.2"]
+  - name: "Check Hadolint Version"
+    command: "hadolint"
+    args : ["--version"]
+    expectedOutput: ["Haskell Dockerfile Linter 2.12.0"]
