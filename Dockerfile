@@ -151,3 +151,11 @@ RUN if [ "$(dpkg --print-architecture)" == "amd64" ]; then cpu_arch='x86_64'; el
   # Control the checksum to ensure no one is messing up with the download
   && grep "$(sha256sum /usr/local/bin/hadolint | awk '{print $1}')" /tmp/hadolint-checksums.txt \
   && chmod a+x /usr/local/bin/hadolint
+
+ARG CST_VERSION=1.16.0
+COPY ./checksums/cst-${CST_VERSION}-checksums.txt /tmp/cst-checksums.txt
+RUN curl --fail --silent --show-error --location --output /usr/local/bin/container-structure-test \
+    "https://github.com/GoogleContainerTools/container-structure-test/releases/download/v1.16.0/container-structure-test-linux-$(dpkg --print-architecture)" \
+  # Control the checksum to ensure no one is messing up with the download
+  && grep "$(sha256sum /usr/local/bin/container-structure-test | awk '{print $1}')" /tmp/cst-checksums.txt \
+  && chmod a+x /usr/local/bin/container-structure-test
