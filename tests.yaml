@@ -106,3 +106,7 @@ commandTests:
     command: "hadolint"
     args : ["--version"]
     expectedOutput: ["Haskell Dockerfile Linter 2.12.0"]
+  - name: "Check CST Version"
+    command: "container-structure-test"
+    args : ["version"]
+    expectedOutput: ["1.16.0"]
